@@ -17,12 +17,10 @@ return new class extends Migration
             $table->foreignId('brand_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('slug')->unique();
-            $table->integer('price');
-            $table->integer('sale_price')->nullable();
-            $table->integer('stock')->default(0);
-            $table->string('thumbnail')->nullable();
+
+            $table->tinyInteger('status')->default(1);
             $table->text('description')->nullable();
-            $table->boolean('is_active')->default(true);
+
             $table->timestamps();
         });
     }

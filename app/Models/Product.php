@@ -25,9 +25,15 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
+
     // Trả về các thông số kỹ thuật của PC, 1 PC có nhiều thông số kỹ thuật
-    public function attributes()
+    public function variants()
     {
-        return $this->hasMany(ProductAttribute::class);
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function primaryImage()
+    {
+        return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }
 }

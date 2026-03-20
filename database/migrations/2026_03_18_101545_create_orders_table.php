@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->integer('total_price');
-            $table->string('status')->default('pending');
+            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('payment_status')->default(0);
             $table->string('payment_method')->default('cod');
             $table->text('shipping_address');
-            $table->text('note')->nullable();
             $table->timestamps();
         });
     }
