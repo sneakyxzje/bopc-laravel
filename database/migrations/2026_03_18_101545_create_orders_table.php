@@ -14,11 +14,19 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('total_price');
-            $table->tinyInteger('status')->default(0);
+
+            // Thông tin người nhận 
+            $table->string('full_name');
+            $table->string('phone');
+            $table->text('address');
+            $table->text('note')->nullable();
+
+            // Thanh toán & Trạng thái
+            $table->bigInteger('total_price');
+            $table->string('payment_method')->default('cod'); // cod, vnpay
             $table->tinyInteger('payment_status')->default(0);
-            $table->string('payment_method')->default('cod');
-            $table->text('shipping_address');
+            $table->tinyInteger('status')->default(0);
+
             $table->timestamps();
         });
     }
