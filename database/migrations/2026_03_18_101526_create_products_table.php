@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->tinyInteger('status')->default(1);
             $table->text('description')->nullable();
-
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
