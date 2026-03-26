@@ -6,12 +6,12 @@
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Quản lý đơn hàng</h1>
-        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-            Tổng số: {{ $orders->total() }} đơn hàng
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-md">
+            Tổng: {{ $orders->total() }} đơn hàng
         </span>
     </div>
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
         <table class="min-w-full leading-normal">
             <thead>
                 <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
@@ -44,9 +44,9 @@
                     </td>
                     <td class="py-3 px-6 text-center">
                         @if($order->payment_status == 1)
-                        <span class="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs">Đã trả</span>
+                        <span class="bg-green-200 text-green-700 py-1 px-3 rounded-md text-xs">Đã trả</span>
                         @else
-                        <span class="bg-yellow-200 text-yellow-700 py-1 px-3 rounded-full text-xs">Chưa trả</span>
+                        <span class="bg-yellow-200 text-yellow-700 py-1 px-3 rounded-md text-xs">Chưa trả</span>
                         @endif
                     </td>
                     <td class="py-3 px-6 text-center">
@@ -68,7 +68,7 @@
                         4 => 'Đã hủy'
                         ];
                         @endphp
-                        <span class="{{ $statusClasses[$order->status] ?? 'bg-gray-100' }} py-1 px-3 rounded-full text-xs font-semibold">
+                        <span class="{{ $statusClasses[$order->status] ?? 'bg-gray-100' }} py-1 px-3 rounded-md text-xs font-semibold">
                             {{ $statusNames[$order->status] ?? 'Không xác định' }}
                         </span>
                     </td>

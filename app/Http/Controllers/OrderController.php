@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\ProductVariant;
 use App\Services\VNPayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,24 +17,28 @@ class OrderController extends Controller
     {
         $this->vnpayService = $vnpayService;
     }
+
+    public function buyNow(Request $request)
+    {
+        session(['buy_now' => [
+            'variant_id' => $request->variant_id,
+            'quantity' => $request->quantity
+        ]]);
+        return redirect()->route('order.checkout');
+    }
     public function index()
     {
-        $item1 = (object)[
-            'product' => (object)['name' => 'Intel Core i9-14900K'],
-            'variant' => (object)['variant_name' => 'Box Chính Hãng'],
-            'quantity' => 1,
-            'price' => 15500000
+        $buyNow = session('buy_now');
+        if (!$buyNow) return redirect()->route('home');
+        $variant = ProductVariant::with('product')->findOrFail($buyNow['variant_id']);
+
+        $item = (object)[
+            'product' => $variant->product,
+            'variant' => $variant,
+            'quantity' => $buyNow['quantity'],
+            'price' => $variant->sale_price ?? $variant->price
         ];
-
-        $item2 = (object)[
-            'product' => (object)['name' => 'Mainboard ASUS ROG Strix Z790'],
-            'variant' => (object)['variant_name' => 'Wifi E-Gaming'],
-            'quantity' => 1,
-            'price' => 12000000
-        ];
-
-        $carts = collect([$item1, $item2]);
-
+        $carts = collect([$item]);
         $subtotal = $carts->sum(function ($item) {
             return $item->price * $item->quantity;
         });
@@ -42,17 +47,16 @@ class OrderController extends Controller
     }
     public function store(Request $request)
     {
-        if (!Auth::check()) {
-            Auth::loginUsingId(1);
-        }
-
+        $buyNow = session('buy_now');
+        $variant = ProductVariant::findOrFail($buyNow['variant_id']);
+        $totalPrice = ($variant->sale_price ?? $variant->price) * $buyNow['quantity'];
         $order = Order::create([
-            'user_id'        => Auth::id(),
+            'user_id'        => Auth::id() ?? null,
             'full_name'      => $request->full_name,
             'phone'          => $request->phone,
             'address'        => $request->address,
             'note'           => $request->note,
-            'total_price'    => 14900000, // Hardcore tạm, sau này sẽ là Cart::total()
+            'total_price'    => $totalPrice,
             'payment_method' => $request->payment_method, // 'vnpay' hoặc 'cod'
             'payment_status' => Order::PAYMENT_UNPAID, // Mặc định là 0 (Chưa thanh toán)
             'status'         => ($request->payment_method == 'vnpay') ? Order::STATUS_AWAITING_PAYMENT : Order::STATUS_PENDING
