@@ -11,7 +11,7 @@
 
 <body>
     <!-- Các component dùng chung sẽ thêm ở đây -->
-
+    @include('components.navbar')
     <main class="container">
         @yield('content')
     </main>
