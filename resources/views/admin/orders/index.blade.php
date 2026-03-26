@@ -74,7 +74,7 @@
                     </td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex item-center justify-center space-x-2">
-                            <a href="{{ route('admin.orders.show', $order->id) }}" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
+                            <a href="{{ route('admin.orders.detail', $order->id) }}" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
                                 <i class="fas fa-eye"></i>
                             </a>
                             <form action="{{ route('admin.orders.update_status', $order->id) }}" method="POST" class="inline">
