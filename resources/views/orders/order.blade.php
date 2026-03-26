@@ -50,14 +50,19 @@
                     <h2 class="text-xl font-semibold mb-5">Đơn hàng của bạn</h2>
 
                     <div class="divide-y mb-5">
+                        @foreach($carts as $item)
                         <div class="py-3 flex justify-between gap-4">
                             <div class="flex-1">
-                                <p class="font-medium text-gray-800">Laptop Dell XPS 13</p>
-                                <p class="text-sm text-gray-500 italic">Phiên bản: 16GB RAM - 512GB SSD</p>
-                                <p class="text-sm text-gray-600">Số lượng: 1</p>
+                                <p class="font-medium text-gray-800">{{ $item->product->name }}</p>
+
+                                <p class="text-sm text-gray-500 italic">
+                                    Phiên bản: {{ $item->variant->variant_name ?? 'Mặc định' }}
+                                </p>
+                                <p class="text-sm text-gray-600">Số lượng: {{ $item->quantity }}</p>
                             </div>
-                            <span class="font-semibold">25.000.000đ</span>
+                            <span class="font-semibold">{{ number_format($item->price) }}đ</span>
                         </div>
+                        @endforeach
                     </div>
 
                     <div class="border-t pt-4 space-y-2">
@@ -71,16 +76,14 @@
                         </div>
                         <div class="flex justify-between text-xl font-bold text-red-600 pt-2 border-t">
                             <span>Tổng cộng:</span>
-                            <span>25.000.000đ</span>
+                            <span>{{ $subtotal }}</span>
                         </div>
+                        <button type="submit" class="w-full mt-6 bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 transition duration-300">
+                            XÁC NHẬN ĐẶT HÀNG
+                        </button>
                     </div>
-
-                    <button type="submit" class="w-full mt-6 bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 transition duration-300">
-                        XÁC NHẬN ĐẶT HÀNG
-                    </button>
                 </div>
             </div>
-        </div>
     </form>
 </div>
 @endsection
