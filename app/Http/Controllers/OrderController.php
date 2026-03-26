@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cart;
 use App\Models\Order;
 use App\Services\VNPayService;
 use Illuminate\Http\Request;
@@ -19,8 +18,27 @@ class OrderController extends Controller
     }
     public function index()
     {
-        $cartItems = Cart::where('user_id', Auth::id());
-        return view("orders.order", compact('cartItems'));
+        $item1 = (object)[
+            'product' => (object)['name' => 'Intel Core i9-14900K'],
+            'variant' => (object)['variant_name' => 'Box Chính Hãng'],
+            'quantity' => 1,
+            'price' => 15500000
+        ];
+
+        $item2 = (object)[
+            'product' => (object)['name' => 'Mainboard ASUS ROG Strix Z790'],
+            'variant' => (object)['variant_name' => 'Wifi E-Gaming'],
+            'quantity' => 1,
+            'price' => 12000000
+        ];
+
+        $carts = collect([$item1, $item2]);
+
+        $subtotal = $carts->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+
+        return view("orders.order", compact('carts', 'subtotal'));
     }
     public function store(Request $request)
     {
