@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [HomeController::class, 'index']);
-
 // Order routes, dành cho customer
 Route::prefix('order')->name('order.')->group(function () {
     Route::get('/checkout', [OrderController::class, 'index'])->name('checkout');
@@ -17,6 +16,6 @@ Route::prefix('order')->name('order.')->group(function () {
 
 Route::prefix('admin/orders')->name('admin.orders.')->group(function () {
     Route::get('/', [AdminOrderController::class, 'index'])->name('index');
-    Route::get('/{id}', [AdminOrderController::class, 'show'])->name('show');
+    Route::get('/{id}', [AdminOrderController::class, 'detail'])->name('detail');
     Route::post('/{id}/update-status', [AdminOrderController::class, 'updateStatus'])->name('update_status');
 });
