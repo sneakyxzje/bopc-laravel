@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -22,14 +23,16 @@ class ProductSeeder extends Seeder
         $intel = Brand::create(['name' => 'Intel', 'slug' => 'intel', 'logo_path' => 'intel.png']);
         $asus = Brand::create(['name' => 'ASUS', 'slug' => 'asus', 'logo_path' => 'asus.png']);
 
-        $p1 = Product::create([
-            'category_id' => $cpu->id,
-            'brand_id'    => $intel->id,
-            'name'        => 'Intel Core i9-14900K',
-            'slug'        => Str::slug('Intel Core i9-14900K'),
-            'description' => 'CPU đầu bảng của Intel thế hệ 14',
-            'is_active'   => true
-        ]);
+        $p1 = Product::updateOrCreate(
+            ['slug' => Str::slug('Intel Core i9-14900K')],
+            [
+                'category_id' => $cpu->id,
+                'brand_id'    => $intel->id,
+                'name'        => 'Intel Core i9-14900K',
+                'description' => 'CPU đầu bảng của Intel thế hệ 14',
+                'is_active'   => true
+            ]
+        );
 
         ProductVariant::create([
             'product_id'   => $p1->id,
@@ -63,7 +66,16 @@ class ProductSeeder extends Seeder
             'email'    => 'test@gmail.com',
             'password' => Hash::make('123456'),
         ]);
-
+        $v1 = ProductVariant::updateOrCreate(
+            ['sku' => 'I9-14900K-BOX'],
+            [
+                'product_id'   => $p1->id,
+                'variant_name' => 'Box Chính Hãng',
+                'price'        => 15500000,
+                'sale_price'   => 14900000,
+                'stock'        => 10,
+            ]
+        );
         if ($user) {
             $order = Order::create([
                 'user_id'         => $user->id,
@@ -75,6 +87,14 @@ class ProductSeeder extends Seeder
                 'phone'           => '0987654321',
                 'note' => 'Giao cho tôi vào giờ hành chính, hỗ trợ tôi lắp đặt',
                 'address'         => 'Hà Nội, Việt Nam',
+            ]);
+
+            OrderItem::create([
+                'order_id'   => $order->id,
+                'product_id' => $p1->id,
+                'variant_id' => $v1->id,
+                'quantity'   => 1,
+                'price'      => 14900000,
             ]);
 
             echo "--- Created Order #{$order->id} for testing ---\n";
