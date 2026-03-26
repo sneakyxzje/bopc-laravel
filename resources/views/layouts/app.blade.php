@@ -12,10 +12,9 @@
 <body>
     <!-- Các component dùng chung sẽ thêm ở đây -->
     @include('components.navbar')
-    <main class="container">
+    <main class="max-w-screen-xl mx-auto px-4">
         @yield('content')
     </main>
-
 
 </body>
 
