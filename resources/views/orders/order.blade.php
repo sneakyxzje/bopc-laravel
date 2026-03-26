@@ -65,25 +65,17 @@
                         @endforeach
                     </div>
 
-                    <div class="border-t pt-4 space-y-2">
-                        <div class="flex justify-between text-gray-600">
-                            <span>Tạm tính:</span>
-                            <span>25.000.000đ</span>
-                        </div>
-                        <div class="flex justify-between text-gray-600">
-                            <span>Phí vận chuyển:</span>
-                            <span>Miễn phí</span>
-                        </div>
-                        <div class="flex justify-between text-xl font-bold text-red-600 pt-2 border-t">
-                            <span>Tổng cộng:</span>
-                            <span>{{ $subtotal }}</span>
-                        </div>
-                        <button type="submit" class="w-full mt-6 bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 transition duration-300">
-                            XÁC NHẬN ĐẶT HÀNG
-                        </button>
+
+                    <div class="flex justify-between text-xl font-bold text-red-600 pt-2 ">
+                        <span>Tổng cộng:</span>
+                        <span>{{ number_format($subtotal) }}đ</span>
                     </div>
+                    <button type="submit" class="w-full mt-6 bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 transition duration-300">
+                        XÁC NHẬN ĐẶT HÀNG
+                    </button>
                 </div>
             </div>
+        </div>
     </form>
 </div>
 @endsection
