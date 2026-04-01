@@ -120,7 +120,7 @@
                 </div>
                 <div class="leading-tight">
                     <div class="text-[10px] text-slate-400 font-medium">Hotline mua hàng</div>
-                    <div class="text-xs font-bold text-[#0e4d3d]">098.655.2233</div>
+                    <div class="text-xs font-bold text-[#0e4d3d]">xxx.xxxx.xxx</div>
                 </div>
             </a>
 
