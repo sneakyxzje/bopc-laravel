@@ -69,13 +69,13 @@
                 <div class="flex items-center justify-between px-5 py-4 bg-[#fff3f0]">
                     <span class="text-3xl font-black text-red-500 tracking-tight"
                         x-text="selectedVariant
-                                  ? new Intl.NumberFormat('vi-VN').format(selectedVariant.sale_price ?? selectedVariant.price) + '.000 đ'
+                                  ? new Intl.NumberFormat('vi-VN').format(selectedVariant.sale_price ?? selectedVariant.price) + 'đ'
                                   : 'Liên hệ'">
                     </span>
                     <template x-if="selectedVariant && selectedVariant.sale_price">
                         <div class="text-right">
                             <div class="text-base text-slate-400 line-through font-medium"
-                                x-text="new Intl.NumberFormat('vi-VN').format(selectedVariant.price) + '.000 đ'">
+                                x-text="new Intl.NumberFormat('vi-VN').format(selectedVariant.price) + 'đ'">
                             </div>
                             <div class="text-xs font-bold text-slate-500 mt-0.5"
                                 x-text="'Tiết kiệm: ' + new Intl.NumberFormat('vi-VN').format(selectedVariant.price - selectedVariant.sale_price) + 'Đ'">
