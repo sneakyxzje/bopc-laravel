@@ -1,2 +1,56 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
 @plugin "@tailwindcss/forms";
+
+@theme {
+    /* Airbnb Color Palette */
+    --color-primary: #ff385c;
+    --color-primary-hover: #e00b41;
+    --color-near-black: #222222;
+    --color-dark-gray: #3f3f3f;
+    --color-secondary-gray: #6a6a6a;
+    
+    /* System Fonts */
+    --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    /* Airbnb Shadows (3-layer stack) */
+    --shadow-airbnb: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.1) 0px 4px 8px;
+    --shadow-airbnb-hover: rgba(0,0,0,0.08) 0px 4px 12px;
+
+    /* Border Radius */
+    --radius-airbnb-btn: 8px;
+    --radius-airbnb-card: 8px;
+    --radius-airbnb-badge: 8px;
+    --radius-airbnb-large: 8px;
+}
+
+@layer base {
+    body {
+        font-family: var(--font-sans);
+        color: var(--color-near-black);
+        background-color: #ffffff;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        letter-spacing: normal;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        letter-spacing: normal;
+        font-weight: 700;
+    }
+}
+
+@layer components {
+    .btn-airbnb-primary {
+        @apply bg-near-black text-white px-6 py-3 rounded-md font-medium transition-all active:scale-95;
+    }
+    
+    .btn-airbnb-brand {
+        @apply bg-primary text-white px-6 py-3 rounded-md font-medium transition-all hover:bg-primary-hover active:scale-95;
+    }
+
+    .card-airbnb {
+        @apply bg-white rounded-md shadow-[var(--shadow-airbnb)] transition-all hover:shadow-[var(--shadow-airbnb-hover)];
+    }
+}

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CartItem extends Model
 {
-    protected $fillable = ['cart_id', 'product_id', 'quantity'];
+    protected $fillable = ['cart_id', 'product_id', 'variant_id', 'quantity'];
 
     public function product()
     {
@@ -15,5 +15,10 @@ class CartItem extends Model
     public function variant()
     {
         return $this->belongsTo(ProductVariant::class, 'variant_id');
+    }
+
+    public function getPriceAttribute()
+    {
+        return $this->variant->sale_price ?? $this->variant->price;
     }
 }

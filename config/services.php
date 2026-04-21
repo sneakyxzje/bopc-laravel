@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'ghtk' => [
+        'token' => env('GHTK_TOKEN'),
+        'base_url' => env('GHTK_URL')
+    ],
+
 ];

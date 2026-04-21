@@ -1,225 +1,216 @@
-<div class="bg-[#0e4d3d]">
-    <div class="max-w-screen-xl mx-auto px-4 flex items-center justify-between gap-2 py-1.5">
+@php
+use Illuminate\Support\Facades\Auth;
+$cartCount = 0;
+if (Auth::check()) {
+    $userCart = \App\Models\Cart::where('user_id', Auth::id())->first();
+    $cartCount = $userCart ? $userCart->items->sum('quantity') : 0;
+} else {
+    $guestId = request()->cookie('guest_id');
+    if ($guestId) {
+        $guestCart = \App\Models\Cart::where('guest_id', $guestId)->first();
+        $cartCount = $guestCart ? $guestCart->items->sum('quantity') : 0;
+    }
+}
+@endphp
 
-        <div class="flex items-center gap-1.5 flex-wrap">
-
-            <a href="#"
-                class="inline-flex items-center gap-1.5 text-white text-xs font-medium px-3 py-1 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 transition whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                </svg>
-                Hệ thống showroom
-            </a>
-
-            <a href="#"
-                class="inline-flex items-center gap-1.5 text-white text-xs font-medium px-3 py-1 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 transition whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 5.98 5.98l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z" />
-                </svg>
-                Bán hàng trực tuyến
-            </a>
-
-            <a href="#" class="text-white/80 text-xs font-medium px-3 py-1 hover:text-white transition whitespace-nowrap">
-                Trang tin công nghệ
-            </a>
-
-            <a href="#"
-                class="inline-flex items-center gap-1.5 text-[#0e4d3d] text-xs font-semibold px-3 py-1 rounded-full bg-[#e8f5e9] hover:bg-[#c8e6c9] transition whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="#0e4d3d" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                    <line x1="8" y1="21" x2="16" y2="21" />
-                    <line x1="12" y1="17" x2="12" y2="21" />
-                </svg>
-                TƯ VẤN BUILD PC
-            </a>
-
-            <a href="#" class="text-white/80 text-xs font-medium px-3 py-1 hover:text-white transition whitespace-nowrap">
-                Phần mềm hay
-            </a>
-
-        </div>
-
-        <div class="flex items-center gap-1 text-white text-xs font-medium shrink-0">
-            @auth
-            <span class="opacity-90">Chào, {{ Auth::user()->name }}</span>
-            <span class="opacity-40 mx-1">|</span>
-            <form method="POST" action="{{ route('logout') }}" class="inline">
-                @csrf
-                <button type="submit" class="hover:underline opacity-90 cursor-pointer">Đăng xuất</button>
-            </form>
-            @else
-            <a href="{{ route('register') }}" class="hover:underline opacity-90">Đăng ký</a>
-            <span class="opacity-40 mx-1">|</span>
-            <a href="{{ route('login') }}" class="hover:underline opacity-90">Đăng nhập</a>
-            @endauth
-        </div>
-
-    </div>
-</div>
-
-<div class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm">
-    <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-start justify-between gap-4 lg:gap-8">
-
-        <a href="{{ route('home') }}" class="flex items-center gap-2 shrink-0 pt-0.5">
-            <div class="w-10 h-10 bg-[#0e4d3d] rounded-xl flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                </svg>
+<header class="w-full bg-white z-50 flex flex-col" x-data="{ mobileOpen: false, userMenuOpen: false }">
+    
+    <div class="bg-near-black text-white h-9 hidden md:flex items-center text-[11px] font-bold uppercase">
+        <div class="max-w-[1780px] w-full mx-auto px-4 sm:px-6 lg:px-10 flex justify-between items-center h-full">
+            <div class="flex items-center gap-6 h-full">
+                <a href="#" class="flex items-center gap-1.5 hover:text-primary transition h-full"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Hệ thống showroom</a>
+                <a href="#" class="flex items-center gap-1.5 hover:text-primary transition h-full"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>Bán hàng trực tuyến</a>
+                <a href="#" class="hover:text-primary transition h-full flex items-center">Trang tin công nghệ</a>
+                <a href="#" class="flex items-center gap-1.5 hover:text-primary transition h-full"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Tư vấn Build PC</a>
+                <a href="#" class="hover:text-primary transition h-full flex items-center">Phần mềm hay</a>
             </div>
-            <span class="text-2xl font-black tracking-tight text-[#0e4d3d] leading-none hidden sm:block">
-                BO<span class="text-red-500">PC</span>
-            </span>
-        </a>
+            
+            <div class="flex items-center gap-3 h-full relative">
+                @auth
+                    
+                    <div class="relative h-full flex items-center" @click.away="userMenuOpen = false">
+                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center gap-2 hover:text-primary transition font-bold text-[11px] uppercase focus:outline-none">
+                            Xin chào, {{ Auth::user()->name }}
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        
+                        <div x-show="userMenuOpen" x-transition.opacity class="absolute right-0 top-full mt-1 w-48 bg-white border border-slate-100 rounded-md shadow-2xl py-2 z-50 text-near-black normal-case">
+                            @if(Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-xs font-bold hover:bg-slate-50 transition">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                                Trang quản trị
+                            </a>
+                            <div class="border-t border-slate-50 my-1"></div>
+                            @endif
+                            
+                            <a href="{{ route('orders.history') }}" class="flex items-center gap-3 px-4 py-2.5 text-xs font-bold hover:bg-slate-50 transition">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                Đơn hàng của tôi
+                            </a>
+                            <div class="border-t border-slate-50 my-1"></div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 transition">Đăng xuất</button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('register') }}" class="hover:text-primary transition normal-case">Đăng ký</a>
+                    <span class="text-secondary-gray">|</span>
+                    <a href="{{ route('login') }}" class="hover:text-primary transition normal-case">Đăng nhập</a>
+                @endauth
+            </div>
+        </div>
+    </div>
 
-        <div class="flex-1 min-w-0 max-w-3xl">
-            <form action="#" method="GET">
-                <div class="flex items-center border-2 border-slate-200 rounded-lg overflow-hidden focus-within:border-[#0e4d3d] transition-colors bg-white">
+    
+    <div class="bg-white py-4 md:py-6 border-b border-slate-100">
+        <div class="max-w-[1780px] mx-auto px-4 sm:px-6 lg:px-10 flex flex-wrap lg:flex-nowrap items-center justify-between gap-6">
+            
+            <a href="{{ route('home') }}" class="flex-shrink-0">
+                <div class="flex items-center gap-1">
+                    <svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5l10-5l-10-5zM2 17l10 5l10-5M2 12l10 5l10-5" />
+                    </svg>
+                    <span class="text-3xl font-black text-near-black">Bo<span class="text-primary">PC</span></span>
+                </div>
+            </a>
 
-                    <select name="category"
-                        class="hidden lg:block appearance-none bg-slate-100 border-r border-slate-200 pl-3 pr-7 h-11 text-sm font-medium text-slate-700 cursor-pointer outline-none shrink-0
-                               bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222.5%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22/%3E%3C/svg%3E')]
-                               bg-no-repeat bg-[center_right_8px]">
+            
+            <div class="flex-1 max-w-3xl order-last lg:order-none w-full">
+                <form action="{{ route('search') }}" method="GET" class="flex items-center w-full h-12 bg-white border border-primary/40 rounded-md focus-within:ring-4 focus-within:ring-primary/10 focus-within:border-primary transition-all overflow-hidden shadow-sm">
+                    
+                    @php
+                        $searchCategories = \App\Models\Category::whereNull('parent_id')->get();
+                    @endphp
+                    <select name="cat" class="hidden sm:block h-full bg-slate-50 border-y-0 border-l-0 px-4 border-r border-slate-200 text-xs font-bold text-secondary-gray focus:ring-0 cursor-pointer hover:bg-slate-100 transition-colors max-w-[150px]">
                         <option value="">Tất cả danh mục</option>
-                        <option value="pc-gaming">PC Gaming</option>
-                        <option value="linh-kien">Linh kiện máy tính</option>
-                        <option value="man-hinh">Màn hình</option>
+                        @foreach($searchCategories as $cat)
+                        <option value="{{ $cat->slug }}" {{ request('cat') == $cat->slug ? 'selected' : '' }}>{{ $cat->name }}</option>
+                        @endforeach
                     </select>
-
-                    <input type="text"
-                        name="q"
-                        placeholder="Tìm kiếm sản phẩm..."
-                        class="flex-1 px-3 h-11 text-sm text-slate-700 placeholder-slate-400 outline-none min-w-0" />
-
-                    <button type="submit"
-                        class="w-12 h-11 bg-red-500 hover:bg-red-600 transition flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Tìm kiếm sản phẩm..."
+                        class="flex-1 h-full px-4 bg-transparent border-none focus:ring-0 text-sm font-bold text-near-black placeholder-secondary-gray">
+                    
+                    <button type="submit" class="w-14 h-full bg-primary text-white flex items-center justify-center transition-all hover:bg-primary-hover">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="8" />
                             <path d="M21 21l-4.35-4.35" />
                         </svg>
                     </button>
+                </form>
+                
+                <div class="hidden sm:flex gap-4 mt-2 text-[11px] text-secondary-gray font-medium">
+                    <a href="#" class="hover:text-primary transition">PC Gaming</a>
+                    <a href="#" class="hover:text-primary transition">Linh kiện máy tính</a>
+                    <a href="#" class="hover:text-primary transition">Màn hình</a>
+                    <a href="#" class="hover:text-primary transition">Laptop</a>
+                </div>
+            </div>
 
+            
+            <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+                <div class="hidden xl:flex items-center gap-3 px-3 py-2 bg-slate-50/50 rounded-md">
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-200 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-bold text-near-black">Hotline mua hàng</div>
+                        <div class="text-sm font-black text-near-black">1900 1234</div>
+                    </div>
                 </div>
 
-                <div class="hidden sm:flex items-center gap-3 mt-1.5 px-1">
-                    <a href="#" class="text-[11px] text-slate-500 hover:text-[#0e4d3d] transition">PC Gaming</a>
-                    <a href="#" class="text-[11px] text-slate-500 hover:text-[#0e4d3d] transition">Linh kiện máy tính</a>
-                    <a href="#" class="text-[11px] text-slate-500 hover:text-[#0e4d3d] transition">Màn hình</a>
-                </div>
-            </form>
-        </div>
+                <a href="{{ route('order.tracking') }}" class="hidden lg:flex items-center gap-3 px-3 py-2 bg-slate-50/50 rounded-md transition group">
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-200 shrink-0 group-hover:bg-slate-50 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-bold text-near-black">Tra cứu</div>
+                        <div class="text-xs font-black text-near-black">Đơn hàng</div>
+                    </div>
+                </a>
 
-        <div class="flex items-center gap-2 lg:gap-3 shrink-0 pt-[2px]">
-
-            <a href="tel:0986552233"
-                class="hidden xl:flex items-center gap-2.5 px-3 py-1.5 border border-slate-200 rounded-xl hover:border-[#0e4d3d] hover:bg-green-50 transition group">
-                <div class="w-8 h-8 rounded-full bg-green-50 group-hover:bg-green-100 flex items-center justify-center transition">
-                    <svg class="w-4 h-4 text-[#0e4d3d]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 5.98 5.98l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z" />
-                    </svg>
-                </div>
-                <div class="leading-tight">
-                    <div class="text-[10px] text-slate-400 font-medium">Hotline mua hàng</div>
-                    <div class="text-xs font-bold text-[#0e4d3d]">xxx.xxxx.xxx</div>
-                </div>
-            </a>
-
-            <a href="#"
-                class="hidden md:flex items-center gap-2.5 px-3 py-1.5 border border-slate-200 rounded-xl hover:border-[#0e4d3d] hover:bg-green-50 transition group">
-                <div class="w-8 h-8 rounded-full bg-slate-50 group-hover:bg-green-100 flex items-center justify-center transition">
-                    <svg class="w-4 h-4 text-slate-600 group-hover:text-[#0e4d3d] transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <rect x="2" y="3" width="20" height="14" rx="2" />
-                        <line x1="8" y1="21" x2="16" y2="21" />
-                        <line x1="12" y1="17" x2="12" y2="21" />
-                    </svg>
-                </div>
-                <div class="leading-tight">
-                    <div class="text-[10px] text-slate-400 font-medium">Xây dựng</div>
-                    <div class="text-xs font-bold text-slate-700">Cấu hình PC</div>
-                </div>
-            </a>
-
-            <a href="#"
-                class="flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-xl hover:border-[#0e4d3d] hover:bg-green-50 transition group relative">
-                <div class="relative">
-                    <svg class="w-5 h-5 text-slate-600 group-hover:text-[#0e4d3d] transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="9" cy="21" r="1" />
-                        <circle cx="20" cy="21" r="1" />
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                    </svg>
-                </div>
-                <span class="text-sm font-semibold text-slate-700 group-hover:text-[#0e4d3d] transition hidden sm:block">Giỏ hàng</span>
-            </a>
-
+                <a href="{{ route('cart.index') }}" class="flex items-center gap-3 px-4 py-2 bg-slate-50/50 rounded-md transition group">
+                    <div class="relative w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-200 shrink-0 group-hover:bg-slate-50 transition">
+                        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        @if($cartCount > 0)
+                        <span class="absolute -top-1 -right-1 w-4 h-4 bg-primary text-white text-[9px] font-black rounded-md flex items-center justify-center border-2 border-white">
+                            {{ $cartCount > 9 ? '9+' : $cartCount }}
+                        </span>
+                        @endif
+                    </div>
+                    <div class="hidden lg:block">
+                        <div class="text-[10px] font-bold text-near-black">Giỏ hàng</div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="bg-white border-b border-slate-100 shadow-sm">
-    <div class="max-w-screen-xl mx-auto px-4 flex items-center overflow-x-auto scrollbar-none">
+    
+    <nav class="bg-white border-b border-slate-100 hidden md:block">
+        <div class="max-w-[1780px] mx-auto px-4 sm:px-6 lg:px-10 flex h-12">
+            
+            <div class="relative h-full shrink-0 group z-50">
+                <div class="h-full bg-near-black text-white px-6 flex items-center gap-3 cursor-pointer hover:bg-near-black/90 transition min-w-[260px]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <span class="text-xs font-black uppercase">Danh mục sản phẩm</span>
+                </div>
+                
+                @php
+                    $globalCategories = \App\Models\Category::whereNull('parent_id')->with('children')->get();
+                @endphp
+                
+                @if($globalCategories->count() > 0)
+                <div class="absolute top-full left-0 w-full bg-white border-x border-b border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 rounded-b-md divide-y divide-slate-50 pt-1 pb-2">
+                    @foreach($globalCategories as $category)
+                    <div class="relative group/item">
+                        <a href="{{ route('home', ['category' => $category->slug]) }}" class="flex items-center justify-between px-6 py-3 hover:bg-slate-50 transition-colors">
+                            <span class="text-xs font-bold text-near-black uppercase">{{ $category->name }}</span>
+                            @if($category->children->count() > 0)
+                            <svg class="w-3.5 h-3.5 text-secondary-gray/50" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            @endif
+                        </a>
+                        
+                        @if($category->children->count() > 0)
+                        <div class="absolute top-0 left-[99%] w-56 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover/item:opacity-100 group-hover/item:visible transition-all duration-200 rounded-md divide-y divide-slate-50 ml-1 py-1">
+                            @foreach($category->children as $child)
+                            <a href="{{ route('home', ['category' => $child->slug]) }}" class="block px-5 py-2.5 text-xs font-bold text-secondary-gray hover:text-primary hover:bg-slate-50 transition-colors">
+                                {{ $child->name }}
+                            </a>
+                            @endforeach
+                        </div>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </div>
 
-        <button class="flex items-center gap-2 bg-[#1a1a2e] text-white font-bold text-sm px-5 h-12 whitespace-nowrap shrink-0 hover:bg-[#0e0e1f] transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-            DANH MỤC SẢN PHẨM
-        </button>
-
-        @php
-        $navItems = [
-        ['label' => 'PC GAMING', 'icon' => 'gaming', 'href' => '#'],
-        ['label' => 'PC WORKSTATION 2D 3D', 'icon' => 'workstation', 'href' => '#'],
-        ['label' => 'PC AMD GAMING', 'icon' => 'amd', 'href' => '#'],
-        ['label' => 'PC MINI', 'icon' => 'mini', 'href' => '#'],
-        ['label' => 'PC VĂN PHÒNG', 'icon' => 'office', 'href' => '#'],
-        ['label' => 'Linh kiện máy tính', 'icon' => 'parts', 'href' => '#'],
-        ];
-        @endphp
-
-        @foreach($navItems as $item)
-        <a href="{{ $item['href'] }}"
-            class="flex items-center gap-2 px-4 h-12 text-xs font-semibold text-slate-700 whitespace-nowrap border-r border-slate-100 hover:text-[#0e4d3d] hover:bg-green-50 transition shrink-0 last:border-r-0">
-
-            @if($item['icon'] === 'gaming')
-            <svg class="w-4 h-4 text-[#0e4d3d] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="2" y="6" width="20" height="12" rx="3" />
-                <line x1="6" y1="12" x2="10" y2="12" />
-                <line x1="8" y1="10" x2="8" y2="14" />
-                <circle cx="16" cy="11" r="0.5" fill="currentColor" />
-                <circle cx="18" cy="13" r="0.5" fill="currentColor" />
-            </svg>
-            @elseif($item['icon'] === 'workstation')
-            <svg class="w-4 h-4 text-[#0e4d3d] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="2" y="3" width="20" height="14" rx="2" />
-                <path d="M8 21h8M12 17v4" />
-            </svg>
-            @elseif($item['icon'] === 'amd')
-            <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5" />
-            </svg>
-            @elseif($item['icon'] === 'mini')
-            <svg class="w-4 h-4 text-[#0e4d3d] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="5" y="5" width="14" height="14" rx="2" />
-                <rect x="9" y="9" width="6" height="6" rx="1" />
-            </svg>
-            @elseif($item['icon'] === 'office')
-            <svg class="w-4 h-4 text-[#0e4d3d] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="2" y="7" width="20" height="15" rx="2" />
-                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                <line x1="12" y1="12" x2="12" y2="16" />
-                <line x1="10" y1="14" x2="14" y2="14" />
-            </svg>
-            @else
-            <svg class="w-4 h-4 text-[#0e4d3d] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18" />
-            </svg>
-            @endif
-
-            {{ $item['label'] }}
-        </a>
-        @endforeach
-
-    </div>
-</div>
+            
+            @php
+            $menuItems = [
+                ['label' => 'PC Gaming', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>'],
+                ['label' => 'PC Workstation 2D 3D', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>'],
+                ['label' => 'PC AMD Gaming', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>'],
+                ['label' => 'PC Mini', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>'],
+                ['label' => 'PC Văn phòng', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>'],
+                ['label' => 'Linh kiện máy tính', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>'],
+            ];
+            @endphp
+            <div class="flex-1 overflow-x-auto scrollbar-none flex">
+                @foreach($menuItems as $item)
+                <a href="#" class="h-full px-5 flex items-center gap-2 text-[11px] font-bold text-near-black hover:text-primary transition-colors uppercase whitespace-nowrap">
+                    <svg class="w-4 h-4 text-near-black/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">{!! $item['icon'] !!}</svg>
+                    {{ $item['label'] }}
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </nav>
+</header>

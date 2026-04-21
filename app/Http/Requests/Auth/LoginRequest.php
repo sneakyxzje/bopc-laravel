@@ -50,6 +50,14 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Kiểm tra xem tài khoản có bị khóa không
+        if (! Auth::user()->is_active) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => 'Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên để được hỗ trợ.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

@@ -3,10 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
+
+    // Giá trị mặc định khi tạo mới - is_active luôn là true
+    protected $attributes = [
+        'is_active' => true,
+    ];
 
     // Method trả về 1 kết quả để biết sản phẩm thuộc về danh mục nào
     public function category()
@@ -35,5 +43,15 @@ class Product extends Model
     public function primaryImage()
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }
